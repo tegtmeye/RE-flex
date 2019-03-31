@@ -34,6 +34,8 @@
 @copyright (c) BSD-3 License - see LICENSE.txt
 */
 
+#include <config.h>
+
 #include "reflex.h"
 
 /// Work around the Boost.Regex partial_match bug by forcing the generated scanner to buffer all input
@@ -464,7 +466,14 @@ void Reflex::init(int argc, char **argv)
 /// Display version information and exit
 void Reflex::version()
 {
-  std::cout << "reflex " REFLEX_VERSION " " PLATFORM << std::endl;
+  std::cout << PACKAGE_STRING << '\n'
+    << "Copyright (c) 2016, Robert van Engelen, Genivia Inc. All rights reserved.\n"
+    << "Other portions copyright (c) by the respective contributors.\n"
+    << "License RBSD: The revised (3-clause) BSD\n  "
+        "<https://opensource.org/licenses/BSD-3-Clause>\n"
+        "This is free software: you are free to change and redistribute it.\n"
+        "There is NO WARRANTY, to the extent permitted by law.\n";
+
   exit(EXIT_SUCCESS);
 }
 
@@ -940,7 +949,7 @@ std::string Reflex::get_regex(size_t& pos)
     else if (c == '(' && pos + 2 < linelen && line.at(pos + 1) == '?' && line.at(pos + 2) == '#')
     {
       // eat (?#...)
-      pos += 2; 
+      pos += 2;
       while (pos < linelen && line.at(pos) != ')')
         pos += 1 + (line.at(pos) == '\\');
       ++pos;
@@ -986,7 +995,7 @@ std::string Reflex::get_regex(size_t& pos)
     flags |= reflex::convert_flag::unicode;
   try
   {
-    regex = reflex::convert(regex, library->signature, flags, &definitions); 
+    regex = reflex::convert(regex, library->signature, flags, &definitions);
   }
   catch (reflex::regex_error& e)
   {
@@ -2722,7 +2731,7 @@ void Reflex::stats()
       else if (!options["tables_file"].empty())
         option.append(";f=").append(start > 0 ? "+" : "").append(file_ext(options["tables_file"], "cpp"));
       if ((!options["full"].empty() || !options["fast"].empty()) && options["tables_file"].empty() && options["stdout"].empty())
-        option.append(";f=+").append(escape_bs(options["outfile"]));      
+        option.append(";f=+").append(escape_bs(options["outfile"]));
       try
       {
         reflex::Pattern pattern(patterns[start], option);

@@ -28,49 +28,26 @@ AC_INIT([reflex],[1.1.2],[github.com/tegtmeye/re-flex])
 AC_CONFIG_SRCDIR([Makefile.am])
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_AUX_DIR(config)
-AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([foreign tar-pax])
 AC_CONFIG_MACRO_DIR([m4])
 
 
-# Checks for programs.
-AC_PROG_CXX
+# checks for programs
 AC_PROG_INSTALL
-
-# Check for C++11 support
-AX_CXX_COMPILE_STDCXX([11],[noext],[mandatory])
-
-# Check for boost
-AX_BOOST_BASE
-AX_BOOST_REGEX
-
-
-AC_PROG_YACC
-AC_SUBST([LEX])
-
+AC_PROG_CXX
 AC_PROG_LIBTOOL
 
-AC_HEADER_TIME
 
-AC_CANONICAL_HOST
+AX_PROG_BISON([AC_SUBST([BISON],[bison])])
 
-PLATFORM=${host}
-AC_SUBST(PLATFORM)
+# Since reflex poses as a substitute to LEX/FLEX, just make sure the LEX is
+# properly defined
+AC_SUBST([LEX])
 
-AC_ARG_WITH([examples],
-[AS_HELP_STRING([--with-examples],
-        [build examples @<:@default=no@:>@])],
-[case "${withval}" in
-  yes) ;;
-  no) ;;
-  *) AC_MSG_ERROR([bad value ${withval} for --with-examples]) ;;
-esac],[with_examples=no])
-AM_CONDITIONAL([EXAMPLES], [test x"$with_examples" = x"yes"])
-
+# Check for maintainer-specific programs
+AM_MISSING_PROG(HELP2MAN, help2man, $missing_dir)
 
 AC_CHECK_PROG([HAVE_DOT],[dot],[YES],[NO])
-
-
 
 
 AC_PATH_PROG(DOXYGEN, doxygen)
@@ -81,16 +58,57 @@ AM_CONDITIONAL([HAVE_DOXYGEN], [test -n "$DOXYGEN"])
 AM_COND_IF([HAVE_DOXYGEN], [AC_CONFIG_FILES([doc/Doxyfile])])
 
 
-# DX_HTML_FEATURE(ON)
-# DX_CHM_FEATURE(OFF)
-# DX_CHI_FEATURE(OFF)
-# DX_MAN_FEATURE(OFF)
-# DX_RTF_FEATURE(OFF)
-# DX_XML_FEATURE(OFF)
-# DX_PDF_FEATURE(OFF)
-# DX_PS_FEATURE(OFF)
-# DX_INIT_DOXYGEN(reflex, $(top_srcdir)/doc/Doxyfile, doc/reflex-doc)
 
+# checks for libraries
+# Check for boost
+AX_BOOST_BASE
+AX_BOOST_REGEX
+AX_LIB_READLINE
+AC_SUBST([LIBREADLINE],[$ax_cv_lib_readline])
+
+# checks for header files
+AC_HEADER_TIME
+
+# checks for types
+
+# checks for structures
+
+# checks for compiler characteristics
+# Check for C++11 compiler
+AX_CXX_COMPILE_STDCXX([11],[noext],[mandatory])
+
+# checks for library functions
+
+# checks for system services
+
+
+
+
+AC_ARG_WITH([examples],
+[AS_HELP_STRING([--with-examples],
+        [build examples @<:@default=yes@:>@])],
+[case "${withval}" in
+  yes) ;;
+  no) ;;
+  *) AC_MSG_ERROR([bad value ${withval} for --with-examples]) ;;
+esac],[with_examples=yes])
+AM_CONDITIONAL([EXAMPLES], [test x"$with_examples" = x"yes"])
+
+
+# These are used to build the examples makefile which is overly simplistic
+# for the benefit of new users
+AC_SUBST([REFLEX],['@top_builddir@/src/reflex'])
+AC_SUBST([REFLEX_INC],['-I@top_srcdir@/include'])
+AC_SUBST([LIBREFLEX],['@top_builddir@/src/.libs/libreflex.a'])
+
+# Needed because the example directory is not included in the subdirs
+AC_SUBST([CONFIG_STATUS_DEPENDENCIES],
+  ['$(top_srcdir)/examples/Makefile.in.in \
+  $(top_srcdir)/examples/flexexample10.test.in \
+  $(top_srcdir)/examples/flexexample10a.test.in \
+  $(top_srcdir)/examples/ctokens.l.in \
+  $(top_srcdir)/examples/jtokens.l.in \
+  $(top_srcdir)/examples/ptokens.l.in'])
 
 AC_CONFIG_FILES( \
   Makefile \
@@ -98,7 +116,13 @@ AC_CONFIG_FILES( \
   src/Makefile \
   tests/Makefile \
   doc/Makefile \
-  examples/Makefile)
+  examples/Makefile.in \
+  examples/Makefile \
+  examples/flexexample10.test \
+  examples/flexexample10a.test \
+  examples/ctokens.l \
+  examples/jtokens.l \
+  examples/ptokens.l)
 
 
 AC_OUTPUT

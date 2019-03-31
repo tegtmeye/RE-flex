@@ -24,14 +24,9 @@
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 
-
-
-# Convenience library to avoid compiling twice for bootstrapping
-# Builds the base library without unicode pieces. Not installable as
-# there are missing symbols
-noinst_LTLIBRARIES= libbasereflex.la
-
-libbasereflex_la_SOURCES= \
+# Sources for libbasereflex. Put these in a variable because the are
+# prerequsites for the bootstrap proxess
+base_sources= \
   convert.cpp \
   debug.cpp \
   error.cpp \
@@ -41,6 +36,13 @@ libbasereflex_la_SOURCES= \
   posix.cpp \
   unicode.cpp \
   utf8.cpp
+
+# Convenience library to avoid compiling twice for bootstrapping
+# Builds the base library without unicode pieces. Not installable as
+# there are missing symbols
+noinst_LTLIBRARIES= libbasereflex.la
+
+libbasereflex_la_SOURCES= $(base_sources)
 
 libbasereflex_la_CPPFLAGS= \
   -Wall -Wextra -pedantic \
@@ -53,7 +55,7 @@ libbasereflex_la_CPPFLAGS= \
 # create the downstream *_scripts.cc files. If parsing in the gen_*_scripts
 # requires unicode support in the future from bootstrap_reflex, this
 # will likely not work as expected.
-noinst_PROGRAMS= \
+EXTRA_PROGRAMS= \
   bootstrap_reflex \
   gen_block_scripts \
   gen_language_scripts \
@@ -72,7 +74,7 @@ bootstrap_reflex_LDADD= \
   libbasereflex.la
 
 
-# noinst programs that make the real unicode sources from 'bootstrap_reflex'.
+# EXTRA programs that make the real unicode sources from 'bootstrap_reflex'.
 # Must link against libbasereflex.
 LEX=$(builddir)/bootstrap_reflex
 LEX_OUTPUT_ROOT=lex.yy
@@ -124,11 +126,7 @@ gen_language_scripts.cc: bootstrap_reflex
 gen_letter_scripts.cc: bootstrap_reflex
 
 
-
-
-
-
-# Now that the final unicode gen_*_scripts.cc files are create, build
+# Now that the final unicode gen_*_scripts.cc files are created, build
 # the actual installed libreflex target. Links against the convenience library
 # libbasereflex
 lib_LTLIBRARIES= libreflex.la
@@ -148,13 +146,13 @@ libreflex_la_LDFLAGS= -version-info 2:0:0
 libreflex_la_LIBADD= \
   libbasereflex.la
 
-block_scripts.cc: Blocks.txt gen_block_scripts
+block_scripts.cc: $(srcdir)/Blocks.txt gen_block_scripts
 	$(builddir)/gen_block_scripts < $(srcdir)/Blocks.txt > block_scripts.cc
 
-language_scripts.cc:	Scripts.txt gen_language_scripts
+language_scripts.cc: Scripts.txt gen_language_scripts
 	$(builddir)/gen_language_scripts < $(srcdir)/Scripts.txt > language_scripts.cc
 
-letter_scripts.cc:	UnicodeData.txt gen_letter_scripts
+letter_scripts.cc: UnicodeData.txt gen_letter_scripts
 	$(builddir)/gen_letter_scripts < $(srcdir)/UnicodeData.txt > letter_scripts.cc
 
 
@@ -180,32 +178,23 @@ reflex_LDADD = \
 
 
 
-# make the manfile here because doc is dependent on Doxygen and the manfile
-# is dependent on reflex itself
-dist_man1_MANS= reflex.l
-
-# not clear why help2man isn't used here unless it is a WIN or licensing issue
-reflex.l: $(top_srcdir)/doc/man.sh $(top_srcdir)/configure.ac
-	$(MAKE) $(AM_MAKEFLAGS) $(top_builddir)/src/reflex$(EXEEXT)
-	$(top_srcdir)/doc/man.sh $(builddir)/reflex reflex.l ${PACKAGE_VERSION}
-
-
 # Ensure the unicode scripts are distributed with the source
 EXTRA_DIST= \
-  reflex.l \
   Blocks.txt \
   Scripts.txt \
   UnicodeData.txt
 
 # Clean up after ourselves.
 CLEANFILES= \
+  bootstrap_reflex \
+  gen_block_scripts \
+  gen_language_scripts \
+  gen_letter_scripts \
   block_scripts.cc \
   language_scripts.cc \
   letter_scripts.cc \
   gen_block_scripts.cc \
   gen_language_scripts.cc \
-  gen_letter_scripts.cc \
-  gen_block_scripts \
-  gen_language_scripts \
-  gen_letter_scripts
+  gen_letter_scripts.cc
+
 

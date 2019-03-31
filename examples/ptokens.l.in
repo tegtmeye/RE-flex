@@ -15,7 +15,7 @@
 %}
 
 // import Python 3.x token definitions
-%i "pdefs.l"
+%i "@srcdir@/pdefs.l"
 
 // implicit line joining is done with the JOINING start condition state
 %x JOINING
@@ -108,7 +108,7 @@ import                  |
 in                      |
 is                      |
 lambda                  |
-nonlocal                | 
+nonlocal                |
 not                     |
 or                      |
 pass                    |

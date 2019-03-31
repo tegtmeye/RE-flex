@@ -27,6 +27,14 @@
 
 
 
+# Only try and build and distribute manfiles if HAVE_HELP2MAN is set
+dist_man_MANS = reflex.1
+
+reflex.1: $(top_srcdir)/src/reflex.cpp $(top_srcdir)/configure.ac
+	cd $(top_builddir)/src/ && $(MAKE) $(AM_MAKEFLAGS) reflex$(EXEEXT)
+	-$(HELP2MAN) --output=$@ --no-info $(top_builddir)/src/reflex$(EXEEXT)
+
+
 docpkg = $(PACKAGE_TARNAME)-doxy-$(PACKAGE_VERSION).tar.gz
 
 doc_DATA = $(docpkg)
@@ -47,7 +55,6 @@ clean-local:
 
 
 EXTRA_DIST= \
-  man.sh \
   Doxyfile.in \
   README.md \
   doxygen_content.css \
@@ -59,10 +66,13 @@ EXTRA_DIST= \
   reflex-logo.png
 
 CLEANFILES= \
-  reflex.l \
   doxywarn.txt \
   doxygen.stamp \
   $(docpkg)
+
+MAINTAINERCLEANFILES= \
+  reflex.1
+
 
 install-data-hook:
 	cd $(DESTDIR)$(docdir) && tar xf $(docpkg)

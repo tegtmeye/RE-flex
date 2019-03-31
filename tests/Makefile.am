@@ -41,3 +41,7 @@ EXTRA_DIST =\
   utf32lorem.txt \
   latin1lorem.txt \
   ebcdiclorem.txt
+
+CLEANFILES= \
+  dump.gv \
+  dump.cpp
