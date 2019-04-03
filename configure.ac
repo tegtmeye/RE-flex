@@ -38,11 +38,11 @@ AC_PROG_CXX
 AC_PROG_LIBTOOL
 
 
-AX_PROG_BISON([AC_SUBST([BISON],[bison])])
+
 
 # Since reflex poses as a substitute to LEX/FLEX, just make sure the LEX is
 # properly defined
-AC_SUBST([LEX])
+
 
 # Check for maintainer-specific programs
 AM_MISSING_PROG(HELP2MAN, help2man, $missing_dir)
@@ -63,8 +63,6 @@ AM_COND_IF([HAVE_DOXYGEN], [AC_CONFIG_FILES([doc/Doxyfile])])
 # Check for boost
 AX_BOOST_BASE
 AX_BOOST_REGEX
-AX_LIB_READLINE
-AC_SUBST([LIBREADLINE],[$ax_cv_lib_readline])
 
 # checks for header files
 AC_HEADER_TIME
@@ -84,19 +82,50 @@ AX_CXX_COMPILE_STDCXX([11],[noext],[mandatory])
 
 
 
+# Examples are only built if requested '--with-examples' and if GNU bison, flex,
+# and readline are available
 AC_ARG_WITH([examples],
-[AS_HELP_STRING([--with-examples],
-        [build examples @<:@default=yes@:>@])],
-[case "${withval}" in
-  yes) ;;
-  no) ;;
-  *) AC_MSG_ERROR([bad value ${withval} for --with-examples]) ;;
-esac],[with_examples=yes])
+  [AS_HELP_STRING([--with-examples],
+    [build examples @<:@default=yes@:>@])],
+  [AS_CASE([$withval],
+    [yes],[],
+    [no],[],
+    [AC_MSG_ERROR([bad value ${withval} for --with-examples])])
+  ],
+  [with_examples=yes])
+
+if test "x$with_examples" = xyes; then
+    AC_PROG_LEX
+    if test "x$LEX" != xflex; then
+        AC_MSG_WARN([--with-examples is requested but flex is required to build the examples and is not found. Skipping.])
+        with_examples=no
+    else
+      AX_PROG_BISON(
+        [
+          AC_SUBST([BISON],[bison])
+          AX_LIB_READLINE
+          if test "x$ax_cv_lib_readline" != "xno"; then
+            AC_SUBST([LIBREADLINE],[$ax_cv_lib_readline])
+          else
+            AC_MSG_WARN([--with-examples is requested but readline is required to build the examples it is not found. Skipping.])
+            with_examples=no
+          fi
+        ],
+        [
+          AC_MSG_WARN([--with-examples is requested but GNU bison is required to build the examples and is not found. Skipping.])
+          [with_examples=no]
+        ]
+      )
+    fi
+fi
+
 AM_CONDITIONAL([EXAMPLES], [test x"$with_examples" = x"yes"])
 
 
+
 # These are used to build the examples makefile which is overly simplistic
-# for the benefit of new users
+# for the benefit of new users. This always happens whether or not
+# --with-examples is set or not
 AC_SUBST([REFLEX],['@top_builddir@/src/reflex'])
 AC_SUBST([REFLEX_INC],['-I@top_srcdir@/include'])
 AC_SUBST([LIBREFLEX],['@top_builddir@/src/.libs/libreflex.a'])

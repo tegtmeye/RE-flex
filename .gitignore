@@ -44,3 +44,12 @@ stamp-h1
 doc/html
 src/reflex.l
 reflex-*.tar.gz
+
+# intermediate files
+examples/ctokens.l
+examples/jtokens.l
+examples/ptokens.l
+
+# distributed files that shouldn't be in the repository
+doc/reflex.1
+doc/Doxyfile
