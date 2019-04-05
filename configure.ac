@@ -28,7 +28,7 @@ AC_INIT([reflex],[1.1.2],[github.com/tegtmeye/re-flex])
 AC_CONFIG_SRCDIR([Makefile.am])
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_AUX_DIR(config)
-AM_INIT_AUTOMAKE([foreign tar-pax])
+AM_INIT_AUTOMAKE([foreign std-options])
 AC_CONFIG_MACRO_DIR([m4])
 
 
@@ -45,17 +45,27 @@ AC_PROG_LIBTOOL
 
 
 # Check for maintainer-specific programs
-AM_MISSING_PROG(HELP2MAN, help2man, $missing_dir)
+AM_MISSING_PROG([HELP2MAN], [help2man], [$missing_dir])
 
-AC_CHECK_PROG([HAVE_DOT],[dot],[YES],[NO])
+# html documentation is only built if requested '--with-doxygen'. Since the
+# resulting html is distributed, we only actually need doxygen and dot if
+# a source file changes though
+AC_ARG_WITH([doxygen],
+  [AS_HELP_STRING([--with-doxygen],
+    [build html documentation using doxygen @<:@default=yes@:>@])],
+  [AS_CASE([$withval],
+    [yes],[],
+    [no],[],
+    [AC_MSG_ERROR([bad value ${withval} for --with-doxygen])])
+  ],
+  [with_doxygen=yes])
 
-
-AC_PATH_PROG(DOXYGEN, doxygen)
-if test -z "$DOXYGEN"; then
-   AC_MSG_WARN([Doxygen-generated documentation will not be built])
+if test "x$with_doxygen" = xyes; then
+  AM_MISSING_PROG([DOXYGEN], [doxygen], [$missing_dir])
+  AC_CHECK_PROG([HAVE_DOT],[dot],[YES],[NO])
+  AC_CONFIG_FILES([doc/Doxyfile])
 fi
-AM_CONDITIONAL([HAVE_DOXYGEN], [test -n "$DOXYGEN"])
-AM_COND_IF([HAVE_DOXYGEN], [AC_CONFIG_FILES([doc/Doxyfile])])
+
 
 
 

@@ -2,16 +2,18 @@
 *.slo
 *.lo
 *.o
-*.dylib
 
 # Compiled Dynamic libraries
 *.so
+*.dylib
 
 # Compiled Static libraries
 *.lai
 *.la
 *.a
 
+# Symbols and other compiler generated things
+*.dSYM
 
 # Mac Stuff
 .DS_Store
@@ -42,14 +44,66 @@ stamp-h1
 
 # Project-related things
 doc/html
-src/reflex.l
-reflex-*.tar.gz
+*.log
+*.gv
+
 
 # intermediate files
+src/block_scripts.cc
+src/bootstrap_reflex
+src/gen_block_scripts
+src/gen_block_scripts.cc
+src/gen_language_scripts
+src/gen_language_scripts.cc
+src/gen_letter_scripts
+src/gen_letter_scripts.cc
+src/language_scripts.cc
+src/letter_scripts.cc
+src/reflex
+
+# example built things
+examples/lex.yy.cpp
+examples/lex.yy.h
+examples/y.tab.c
+examples/y.tab.h
+examples/flexexample[0-9]*
+examples/reflexexample[0-9]*
 examples/ctokens.l
 examples/jtokens.l
 examples/ptokens.l
+examples/braille
+examples/calc
+examples/cards
+examples/cow
+examples/cows
+examples/csv
+examples/ctokens
+examples/echo
+examples/indent
+examples/json
+examples/jtokens
+examples/ptokens
+examples/tag
+examples/tag_lazy
+examples/tag_lazystates
+examples/tag_tidy
+examples/tag_unicode
+examples/unicode
+examples/wc
+examples/wcpp
+examples/wcu
+examples/wcwc
+tests/btest
+tests/dump.cpp
+tests/lorem
+tests/rtest
+tests/stest
+tests/test
+tests/test_bits
+tests/test_ranges
 
 # distributed files that shouldn't be in the repository
 doc/reflex.1
 doc/Doxyfile
+doc/doxygen.stamp
+doc/reflex-*.tar.gz

@@ -27,13 +27,8 @@
 
 ACLOCAL_AMFLAGS = --install -I m4
 
-if HAVE_DOXYGEN
-  MAYBE_DOCS=doc
-endif
-
 # Leave examples off of DIST_SUBDIRS on purpose
-SUBDIRS = src include tests $(MAYBE_DOCS)
-DIST_SUBDIRS = src include tests doc
+SUBDIRS = src include tests doc
 
 
 # Make sure the top level files and the files necessary to build the
@@ -177,7 +172,8 @@ makefile_subs = sed -e ' s/[@]REFLEX[@]/reflex/g' \
                     -e ' s|[@]builddir[@]/||g' \
                     -e ' s/[@].*[@]//g'
 
-example_subs = sed -e ' s|[@]builddir[@]/||g'
+example_subs = sed -e ' s|[@]builddir[@]/||g' \
+                   -e ' s|[@]srcdir[@]/||g'
 install-data-hook:
 	$(makefile_subs) $(top_srcdir)/examples/Makefile.in.in > $(DESTDIR)$(docdir)/examples/Makefile
 	$(example_subs) $(top_srcdir)/examples/flexexample10.test.in > $(DESTDIR)$(docdir)/examples/flexexample10.test

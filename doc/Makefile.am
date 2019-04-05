@@ -37,14 +37,14 @@ reflex.1: $(top_srcdir)/src/reflex.cpp $(top_srcdir)/configure.ac
 
 docpkg = $(PACKAGE_TARNAME)-doxy-$(PACKAGE_VERSION).tar.gz
 
-doc_DATA = $(docpkg)
+dist_doc_DATA = $(docpkg)
 
 $(docpkg): doxygen.stamp
-	tar chof - html | gzip -9 -c >$@
+	tar chof - html | gzip $(GZIP_ENV) -c >$@
 
 
-doxygen.stamp: Doxyfile
-	$(DOXYGEN) $(DOXYFLAGS) $<
+doxygen.stamp: Doxyfile.in
+	$(DOXYGEN) $(DOXYFLAGS) Doxyfile
 	echo Timestamp > $@
 
 uninstall-hook:
@@ -55,6 +55,7 @@ clean-local:
 
 
 EXTRA_DIST= \
+  doxygen.stamp \
   Doxyfile.in \
   README.md \
   doxygen_content.css \
@@ -66,13 +67,12 @@ EXTRA_DIST= \
   reflex-logo.png
 
 CLEANFILES= \
-  doxywarn.txt \
+  doxywarn.txt
+
+MAINTAINERCLEANFILES= \
+  reflex.1 \
   doxygen.stamp \
   $(docpkg)
 
-MAINTAINERCLEANFILES= \
-  reflex.1
-
-
 install-data-hook:
-	cd $(DESTDIR)$(docdir) && tar xf $(docpkg)
+	cd $(DESTDIR)$(docdir) && gzip $(GZIP_ENV) -dc $(docpkg) | tar xf -
