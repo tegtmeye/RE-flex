@@ -12,7 +12,7 @@ AM_CPPFLAGS= \
   -I$(top_srcdir)/include \
   $(BOOST_CPPFLAGS)
 
-LDFLAGS= \
+AM_LDFLAGS= \
   $(BOOST_LDFLAGS)
 
 LDADD= \

@@ -1,13 +1,13 @@
 
-[![logo][logo-url]][reflex-url]
+![logo][logo-url]
 
-[![build status][travis-image]][travis-url] [![Language grade: C/C++][lgtm-image]][lgtm-url] [![license][bsd-3-image]][bsd-3-url]
+[![license][bsd-3-image]][bsd-3-url]
 
 "The regex-centric, fast and flexible lexical analyzer generator for C++"
 
 Flex reimagined.  Fast, flexible, adds Boost 💪
 
-[RE/flex][reflex-url] is faster than Flex while providing a wealth of new
+RE/flex is faster than Flex while providing a wealth of new
 features.  RE/flex is also much faster than regex libraries such as
 Boost.Regex, C++11 std::regex, PCRE2 and RE2.  For example, tokenizing a
 representative C source code file into 244 tokens takes only 13 microseconds:
@@ -70,138 +70,165 @@ Features
   to use in plain C++ code for pattern matching on (wide) strings, files, and
   streams.
 
-The RE/flex software is fully self-contained.  No other libraries are required.
-Boost.Regex is optional to use as a regex engine.
-
 The RE/flex repo includes tokenizers for Java, Python, and C/C++.
+
+
+### Note
+
+This is a forked version of RE-Flex from [Genivia/RE-flex][reflex-url] that  strives to be use a fully GNU [Autotool][autotool-url]-compliant build system while adding additional features and code cleanup. Major changes and features from the original version will be incorporated if possible.
+
 
 
 Installation
 ------------
 
-### Windows users
 
-Use `reflex/bin/reflex.exe` from the command line or add a **Custom Build
-Step** in MSVC++ as follows:
+### Unix/Linux and Mac OS
 
-1. select the project name in **Solution Explorer** then **Property Pages**
-   from the **View** menu (see also
-   [custom-build steps in Visual Studio](http://msdn.microsoft.com/en-us/library/hefydhhy.aspx));
 
-2. add an extra path to the `reflex/include` folder in the **Include
-   Directories** under **VC++ Directories**, which should look like
-   `$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\YourUserName\Documents\reflex\include`
-   (this assumes the `reflex` source package is in your **Documents** folder).
+Before you start, it is important to understand there are two sets of dependancies decided by where you obtained the source code. If you cloned the source directly from a git repository, you will need to have installed maintainers tools in addition to the main project dependancies. This is generally true for many projects using the Autotool build system as it separates dependancies needed to maintain the package from dependancies needed to use the package. These maintainer dependancies are:
 
-3. enter `"C:\Users\YourUserName\Documents\reflex\bin\reflex.exe" --header-file
-   "C:\Users\YourUserName\Documents\mylexer.l"` in the **Command Line** property
-   under **Custom Build Step** (this assumes `mylexer.l` is in your
-   **Documents** folder);
+* [GNU automake](https://www.gnu.org/software/automake)
+* [GNU autoconf](https://www.gnu.org/software/autoconf)
+* [GNU libtool](https://www.gnu.org/software/libtool)
+* [GNU help2man](https://www.gnu.org/software/help2man)
+* [doxygen](http://www.doxygen.nl)
+* [Graphviz](https://www.graphviz.org)
 
-4. enter `lex.yy.h lex.yy.cpp` in the **Outputs** property;
+If you obtained RE-Flex from a distribution tarball (you downloaded the file `reflex-X.Y.Z.tar.gz` from somewhere, you only need a recent C++ compiler. If this is the case, skip to [Building from a distribution](#building-from-a-distribution) otherwise continue on to [Cloning from a git repository](#cloning-from-a-git-repository) below.
 
-5. specify **Execute Before** as `PreBuildEvent`.
+Running the examples require the following:
 
-If you are using specific reflex options such as `--flex` then add these in step 3.
+* [flex][flex-url]
+* [GNU bison][bison-url]
 
-Before compiling your program with MSVC++, drag the folders `reflex/lib` and
-`reflex/unicode` to the **Source Files** in the **Solution Explorer** panel of
-your project.  Next, run `reflex.exe` simply by compiling your project (which
-may fail, but that is OK for now as long as we executed the custom build step
-to run `reflex.exe`).  Drag the generated `lex.yy.h` and `lex.yy.cpp` files to
-the **Source Files**.  Now you are all set!
+#### Cloning from a git repository
 
-In addition, the `reflex/vs` directory contains batch scripts to build projects
-with MS Visual Studio C++.
+First, clone the repository into a convenient location
+```
+$ git clone https://github.com/tegtmeye/RE-flex.git
+```
 
-### Unix/Linux and Mac OS X
+Navigate into the newly cloned repository on your local machine and bootstrap the autotool build process by running `autoreconf -fi`.
+```
+$ cd RE-flex
+$ autoreconf -fi
+```
 
-On Mac OS X you can use [homebrew](https://brew.sh) to install RE/flex with
-`brew install re-flex`.  Otherwise:
+Skip to the [Building and installing](#building-and-installing) step below.
 
-You have two options: 1) quick install or 2) configure and make.
+#### Building from a distribution
 
-### Quick install
+If you download the distribution tarball corresponding to the current release, it will be named something similar to `reflex-X.Y.Z.tar.gz`. Unpack the tarball by issuing the following:
 
-First clone the code:
+```
+$ tar zxf reflex-X.Y.Z.tar.gz
+```
 
-    $ git clone https://github.com/Genivia/RE-flex
+This will result in a new directory named `reflex-X.Y.Z`. Navigate into the directory and then continue on to 'Building and installing' below.
 
-Then simply do a quick clean build, assuming your environment is pretty much
-standard:
+```
+$ cd reflex-X.Y.Z.tar.gz
+```
 
-    $ ./clean.sh
-    $ ./build.sh
+#### Building and installing
 
-This compiles the **reflex** tool and installs it locally in `reflex/bin`.  For
-local use of RE/flex in your project, you can add this location to your `$PATH`
-variable to enable the new `reflex` command:
+At this point, there will be a script named `configure` that analyses your environment and prepares the build. This configure script accepts configuration and installation options.  To view these options, run:
 
-    $ export PATH=$PATH:/your_path_to_reflex/reflex/bin
+```
+$ ./configure --help
+```
 
-Note that the `libreflex.a` and `libreflex.so` libraries are saved locally in
-`reflex/lib`.  Link against the library when you use the RE/flex regex engine
-in your code, such as:
+A common configure option is to set the installation location. If missing, the installation location defaults to `/usr/local`
 
-    $ c++ <options and .o/.cpp files> -L/your_path_to_reflex/reflex/lib -lreflex
+```
+$ ./configure --prefix=/path/to/install/location
+```
 
-or you could statically link libreflex.a with:
+Next, run configure with the appropriate optons included (here represented by [OPTIONS])
 
-    $ c++ <options and .o/.cpp files> /your_path_to_reflex/reflex/lib/libreflex.a
+```
+$ ./configure [OPTIONS]
+```
 
-Also note that the RE/flex header files that you will need to include in your
-project are locally located in `include/reflex`.
+The configure script will run many tests printing a summary of the results. If it cannot detect a required tool or compiler feature, the configure script will exit with an error message. If configuration is successful, build the reflex package by issuing the make command. The build system supports parallelized builds by including the `-j` option (as in `make -j`).
 
-To fully install the library and the `reflex` command in `/usr/local/lib` and
-`/usr/local/bin`:
+```
+$ make
+```
 
-    $ sudo ./allinstall.sh
 
-Or use the `make -f Make install` command to do the same:
+After this successfully completes, you can optionally check the build by issuing:
 
-    $ cd lib; sudo make -f Make install
-    $ cd src; sudo make -f Make install
+```
+$ make check
+```
 
-### Configure and make
+Which runs several tests located in the `tests` directory along with building and running the contents of `examples`.
 
-The configure script accepts configuration and installation options.  To view
-these options, run:
+Finally install reflex by running:
 
-    $ ./configure --help
+```
+$ make install
+```
 
-Run configure and make:
+You may need to install with elevated privileges depending on the installation location--for example if installing in the default location `/usr/local`.
 
-    $ ./configure && make
+```
+$ sudo make install
+```
 
-After this successfully completes, you can optionally run `make install` to
-install the `reflex` command and `libreflex` library:
+This installs reflex according to standard GNU directory layout where the `reflex` executable is installed in `$(prefix)/bin`, the library is installed in `$(prefix)/lib`, header files are installed in `$(prefix)/include` and documentation including examples are installed in `$(prefix)/share`.
 
-    $ sudo make install
 
-Unfortunately, cloning from Git does not preserve timestamps which means that
-you may run into "WARNING: 'aclocal-1.15' is missing on your system."  To
-work around this problem, run:
-
-    $ autoreconf -fi
-    $ ./configure && make
 
 ### Optional libraries to install
 
+These libraries and packages are only required if you need the functionality in your project. The RE/Flex installation does not depend on them.
+
 - To use Boost.Regex as a regex engine with the RE/flex library and scanner
-  generator, install [Boost][boost-url] and link your code against
-  `libboost_regex.a`
+  generator, install [Boost][boost-url] and link your code against the boost regex library.
 
-- To visualize the FSM graphs generated with **reflex** option `--graphs-file`,
-  install [Graphviz dot][dot-url].
+- To visualize the FSM graphs generated with the **reflex** option `--graphs-file`, install [Graphviz dot][dot-url].
 
 
-Usage
+
+### Windows
+
+This version of RE/flex currently does not support building on Windows. The original version provided build instructions and an actual distributed Windows executable. Unfortunately, the details of the build, including which versions of Windows was supported, and testing of this executable was not included. Therefore, Windows-specific support and the included executable have been removed.
+
+Contributions of a complete and transparent Windows build are welcome.
+
+The unsupported instructions provided by the original RE/flex are as follows.
+
+> Use `reflex/bin/reflex.exe` from the command line or add a **Custom Build Step** in MSVC++ as follows:
+>
+> 1. select the project name in **Solution Explorer** then **Property Pages** from the **View** menu (see also [custom-build steps in Visual Studio](http://msdn.microsoft.com/en-us/library/hefydhhy.aspx));
+>
+> 2. add an extra path to the `reflex/include` folder in the **Include Directories** under **VC++ Directories**, which should look like `$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\YourUserName\Documents\reflex\include` (this assumes the `reflex` source package is in your **Documents** folder).
+>
+> 3. enter `"C:\Users\YourUserName\Documents\reflex\bin\reflex.exe" --header-file "C:\Users\YourUserName\Documents\mylexer.l"` in the **Command Line** property under **Custom Build Step** (this assumes `mylexer.l` is in your **Documents** folder);
+>
+> 4. enter `lex.yy.h lex.yy.cpp` in the **Outputs** property;
+>
+> 5. specify **Execute Before** as `PreBuildEvent`.
+>
+> If you are using specific reflex options such as `--flex` then add these in step 3.
+>
+> Before compiling your program with MSVC++, drag the folders `reflex/lib` and `reflex/unicode` to the **Source Files** in the **Solution Explorer** panel of your project.  Next, run `reflex.exe` simply by compiling your project (which may fail, but that is OK for now as long as we executed the custom build step to run `reflex.exe`).  Drag the generated `lex.yy.h` and `lex.yy.cpp` files to the **Source Files**.  Now you are all set!
+>
+> In addition, the `reflex/vs` directory contains batch scripts to build projects with MS Visual Studio C++.
+
+
+Using RE/flex
 -----
 
 There are two ways you can use this project:
 
 1. as a scanner generator for C++, similar to Flex;
 2. as an extensible regex matching library for C++.
+
+#### Scanner Generator for C++
 
 For the first option, simply build the **reflex** tool and run it on the
 command line on a lexer specification:
@@ -217,8 +244,20 @@ visualized with the [Graphviz dot][dot-url] tool:
 
 ![Visualize DFA graphs with Graphviz dot][FSM-url]
 
-Several examples are included to get you started.  See the [manual][manual-url]
-for more details.
+Included in the installation are several examples designed to illustrate the features of RE/flex. They are located in `$(prefix)/share/doc/reflex/examples/`. To quickly get started, simply copy this directory to a convenient, writable location (your home directory for example) and run `make`.
+
+```
+$ cp -r /path/to/share/doc/reflex/examples $HOME/.
+$ cd examples
+$ make
+```
+
+The example directory includes a minimalist makefile that reflects the appropriate build settings at the time of RE/flex's installation. This will work for 90% of most users. If however you have a non-standard installation, you may need to adjust the build rules at the top of the makefile.
+
+
+Run the `reflex --help` to see a full list of command-line options.
+
+#### Extensible Regex Matching Library for C++
 
 For the second option, simply use the new RE/flex matcher classes to start
 pattern matching on strings, wide strings, files, and streams.
@@ -359,86 +398,59 @@ above saves the cost of conversion to just once to support many matchings.
 How to contribute?
 ------------------
 
-Please see [CONTRIBUTING](CONTRIBUTING.md).
+This version of RE/flex strives to adhere to best-practices in terms of code quality, project organization, and deployment to overcome some of the original fragility at the time the project was forked.
+
+Contributions in-line with these goals are encouraged.
 
 
 Where do I find the documentation?
 ----------------------------------
 
-Read more about RE/flex in the [manual][manual-url].
+A full list of the `reflex` executable is available using the help option:
+
+```
+$ reflex --help
+```
+
+A man page is also installed
+
+```
+$ man reflex
+```
+
+HTML documentation is installed and is available by pointing your browser to `$(prefix)/share/doc/reflex/html/index.html` where `$(prefex)` is the installation prefix. For example, on Mac OS, issuing the following will open the documentation web page in your default browser.
+
+```
+$ open /usr/local/share/doc/reflex/html/index.html
+```
 
 
-License and copyright
+Authors
+-------
+
+RE/flex was originally written by Robert van Engelen, Genivia Inc and includes contributions by others.
+
+Updating the build system to Autotools by Michael B Tegtmeyer
+
+
+License
 ---------------------
 
-RE/flex by Robert van Engelen, Genivia Inc.
-Copyright (c) 2015-2018, All rights reserved.
-
-RE/flex is distributed under the BSD-3 license LICENSE.txt.
-Use, modification, and distribution are subject to the BSD-3 license.
+RE/flex is distributed under the BSD 3 clause license - see the [COPYING](COPYING) for details.
 
 
-Changelog
----------
-
-- Nov 14, 2016: 0.9.0  beta released
-- Nov 15, 2016: 0.9.1  improved portability
-- Nov 17, 2016: 0.9.2  improvements and fixes for minor issues
-- Nov 19, 2016: 0.9.3  replaces `%import` with `%include`, adds freespace option `-x`, fixes minor issues
-- Nov 20, 2016: 0.9.4  fixes minor issues, added new examples/json.l
-- Nov 25, 2016: 0.9.5  bug fixes and improvements
-- Dec  1, 2016: 0.9.6  portability improvements
-- Dec  6, 2016: 0.9.7  bug fixes, added option `--regexp-file`, Python tokenizer
-- Dec  9, 2016: 0.9.8  fixes minor issues, improved reflex tool options `--full` and `--fast`, generates scanner with FSM table or a fast scanner with FSM code, respectively
-- Jan  8, 2017: 0.9.9  bug fixes and improved Flex compatibility
-- Jan 15, 2017: 0.9.10 improved compatibility with Flex options, fixed critical issue with range unions
-- Jan 25, 2017: 0.9.11 added C++11 std::regex matching engine support, moved .h files to include/reflex, requires `#include <reflex/xyz.h>` from now on, fixed `errno_t` portability issue
-- Mar  3, 2017: 0.9.12 refactored and improved, includes new regex converters for regex engines that lack regex features such as Unicode character classes
-- Mar  4, 2017: 0.9.13 improved warning and error messages
-- Mar  6, 2017: 0.9.14 reflex option -v shows stats with execution timings, bug fixes
-- Mar  8, 2017: 0.9.15 added `wtext()`, `wpair()`, `winput()` methods, other improvements
-- Mar 22, 2017: 0.9.16 bug fixes, speed improvements, improved option `--unicode` regex conversion, also with `(?u:)`, changed `wtext()` to `wstr()` and added a `str()` method
-- Mar 24, 2017: 0.9.17 improvements
-- Mar 26, 2017: 0.9.18 added reflex option `-p` (`--perf-report`) for performance debugging, added doc/man/reflex.1 man page, added interactive readline example
-- Mar 31, 2017: 0.9.19 fixed reflex option `-m`, `lexer.in(i)` now resets the lexer, fixed reassigning the same input to the lexer that caused UTF BOM to be read twice
-- Apr  5, 2017: 0.9.20 EBCDIC file translation, other improvements
-- Apr 10, 2017: 0.9.21 fixed option `-P` to support multiple lexer classes in one application, added `configure` installation script, optional quick install with `allinstall.sh` (renamed from `install.sh`)
-- Apr 12, 2017: 0.9.22 improved explanations of `matches()`, `find()`, `scan()`, `split()` that return nonzero for a match, other minor improvements
-- May 24, 2017: 0.9.23 improved portability, added file encoding conversions for CP-1250 to CP-1258, CP 437, and CP 850/858
-- Jun 24, 2017: 0.9.24 added an option for users to define their own custom code pages to translate input, fixed `#` in free space mode
-- Jun 28, 2017: 0.9.25 fixed `--fast` FSM not always halting on EOF after a mismatch; fixed buffer realloc, added new examples/csv.l
-- Jul  5, 2017: 0.9.26 fixed `wstr()` always returning UTF-16 strings (should be UTF-16 only when `std::wstring` requires it)
-- Sep 26, 2017: 0.9.27 the Flex-compatible `yy_scan_string()`, `yy_scan_bytes()` and `yy_scan_buffer()` functions now create a new buffer as in Flex, delete this buffer with `yy_delete_buffer()`; fixed examples to work with newer Bison versions (Bison 3.0.4)
-- Dec 12, 2017: 0.9.28 added `yy_scan_wstring` and `yy_scan_wbuffer` for wide string scanning with Flex-like functions
-- Jan 28, 2018: 1.0.0 removed dynamic exception specifications to comply with C++17, upgraded to stable release 1.0
-- Feb 24, 2018: 1.0.1 added Unicode IsBlockName categories
-- Mar  6, 2018: 1.0.2 added namespace nesting with `%option namespace=NAME1.NAME2.NAME3 ...`
-- Mar  7, 2018: 1.0.3 fixed `--namespace` and `%option namespace`
-- Apr 22, 2018: 1.0.4 updated to Unicode 10, cleaned up code to remove tool warnings
-- Jun 29, 2018: 1.0.5 updated `--namespace` for options `--fast` and `--full` to support the generation of multiple optimized lexers placed in namespaces.
-- Jul  9, 2018: 1.0.6 added `--bison-cc` option to generate scanners for Bison 3.0 `%skeleton "lalr1.cc"` C++ parsers, included two examples `flexexample9xx` and `reflexexample9xx` to demo this feature.
-- Jul 12, 2018: 1.0.7 added `--bison-cc-namespace` and `--bison-cc-parser` options to customize Bison 3.0 `%skeleton "lalr1.cc"` C++ parsers.
-- Jul 30, 2018: 1.0.8 updated to Unicode 11.
-- Aug 21, 2018: 1.0.9 fixed reflex regex library matching with range quantifiers by correcting coding typo.
-- Dec  8, 2018: 1.0.10 fixed `columno()` to take tab spacing into account.
-- Jan 18, 2019: 1.0.11 fixed GCC 8.2 warnings, additional enhancements.
-- Jan 21, 2019: 1.0.12 the reflex tool now reads files using `reflex::Input`.
-- Feb 20, 2019: 1.1.0 code quality updates.
-- Mar  6, 2019: 1.1.1 fixed `configure` and `make install` header files, updated `--bison-locations` option.
-- Mar  7, 2019: 1.1.2 fixed reflex tool handling of backslashes in file paths.
 
 [logo-url]: https://www.genivia.com/images/reflex-logo.png
 [reflex-url]: https://www.genivia.com/reflex.html
+
+[autotool-url]: https://www.gnu.org/software/automake/manual/html_node/Autotools-Introduction.html
+
 [manual-url]: https://www.genivia.com/doc/reflex/html
 [flex-url]: http://dinosaur.compilertools.net/#flex
 [lex-url]: http://dinosaur.compilertools.net/#lex
-[bison-url]: http://dinosaur.compilertools.net/#bison
+[bison-url]: https://www.gnu.org/software/bison
 [dot-url]: http://www.graphviz.org
 [FSM-url]: https://www.genivia.com/images/reflex-FSM.png
 [boost-url]: http://www.boost.org
-[travis-image]: https://travis-ci.org/Genivia/RE-flex.svg?branch=master
-[travis-url]: https://travis-ci.org/Genivia/RE-flex
-[lgtm-image]: https://img.shields.io/lgtm/grade/cpp/g/Genivia/RE-flex.svg?logo=lgtm&logoWidth=18
-[lgtm-url]: https://lgtm.com/projects/g/Genivia/RE-flex/context:cpp
 [bsd-3-image]: https://img.shields.io/badge/license-BSD%203--Clause-blue.svg
 [bsd-3-url]: https://opensource.org/licenses/BSD-3-Clause

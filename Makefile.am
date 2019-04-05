@@ -1,5 +1,4 @@
 #  Copyright (c) 2018, Michael B Tegtmeyer
-#  Copyright (c) 2016, Robert van Engelen, Genivia Inc.
 #
 #  All rights reserved.
 #  Redistribution and use in source and binary forms, with or without
@@ -41,10 +40,9 @@ EXTRA_DIST= \
   examples/ctokens.l.in \
   examples/jtokens.l.in \
   examples/ptokens.l.in \
-  CODE_OF_CONDUCT.md \
   CONTRIBUTING.md \
-  INSTALL.md \
-  LICENSE.txt \
+  INSTALL \
+  COPYING \
   README.md
 
 DISTCLEANFILES= \
@@ -181,15 +179,3 @@ install-data-hook:
 	$(example_subs) $(top_srcdir)/examples/ctokens.l.in > $(DESTDIR)$(docdir)/examples/ctokens.l
 	$(example_subs) $(top_srcdir)/examples/jtokens.l.in > $(DESTDIR)$(docdir)/examples/jtokens.l
 	$(example_subs) $(top_srcdir)/examples/ptokens.l.in > $(DESTDIR)$(docdir)/examples/ptokens.l
-	@echo " ______________________________________________________ "; \
-	 echo "|                                                      |"; \
-	 echo "| You have successfully built and installed reflex.    |"; \
-	 echo "|                                                      |"; \
-	 echo "| You can use the reflex command to generate scanners. |"; \
-	 echo "| Link your generated scanner with -lreflex.           |"; \
-	 echo "|                                                      |"; \
-	 echo "| Thanks for using reflex.                             |"; \
-	 echo "|                                                      |"; \
-	 echo "|             https://github.com/Genivia/RE-flex       |"; \
-	 echo "|             https://sourceforge.net/projects/re-flex |"; \
-	 echo "|______________________________________________________|";
