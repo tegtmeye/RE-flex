@@ -125,7 +125,7 @@ If you download the distribution tarball corresponding to the current release, i
 $ tar zxf reflex-X.Y.Z.tar.gz
 ```
 
-This will result in a new directory named `reflex-X.Y.Z`. Navigate into the directory and then continue on to 'Building and installing' below.
+This will result in a new directory named `reflex-X.Y.Z`. Navigate into the directory and then continue on to [Building and installing](#building-and-installing) below.
 
 ```
 $ cd reflex-X.Y.Z.tar.gz
@@ -180,7 +180,7 @@ $ sudo make install
 
 This installs reflex according to standard GNU directory layout where the `reflex` executable is installed in `$(prefix)/bin`, the library is installed in `$(prefix)/lib`, header files are installed in `$(prefix)/include` and documentation including examples are installed in `$(prefix)/share`.
 
-
+Detailed information on building and installing is available in the [INSTALL](INSTALL) file.
 
 ### Optional libraries to install
 
@@ -252,7 +252,7 @@ $ cd examples
 $ make
 ```
 
-The example directory includes a minimalist makefile that reflects the appropriate build settings at the time of RE/flex's installation. This will work for 90% of most users. If however you have a non-standard installation, you may need to adjust the build rules at the top of the makefile.
+The example directory includes a minimalist makefile that reflects the appropriate build settings at the time of RE/flex's installation. This will work for 90% of users. If however you have a non-standard installation, you may need to adjust the build rules at the top of the makefile.
 
 
 Run the `reflex --help` to see a full list of command-line options.
@@ -406,7 +406,7 @@ Contributions in-line with these goals are encouraged.
 Where do I find the documentation?
 ----------------------------------
 
-A full list of the `reflex` executable is available using the help option:
+A full list of the `reflex` executable options are available using the help option:
 
 ```
 $ reflex --help
@@ -418,7 +418,7 @@ A man page is also installed
 $ man reflex
 ```
 
-HTML documentation is installed and is available by pointing your browser to `$(prefix)/share/doc/reflex/html/index.html` where `$(prefex)` is the installation prefix. For example, on Mac OS, issuing the following will open the documentation web page in your default browser.
+HTML documentation is also installed and available by pointing your browser to `$(prefix)/share/doc/reflex/html/index.html` where `$(prefex)` is the installation prefix. For example, on Mac OS, issuing the following will open the documentation web page in your default browser.
 
 ```
 $ open /usr/local/share/doc/reflex/html/index.html

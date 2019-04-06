@@ -45,7 +45,7 @@ noinst_LTLIBRARIES= libbasereflex.la
 libbasereflex_la_SOURCES= $(base_sources)
 
 libbasereflex_la_CPPFLAGS= \
-  -Wall -Wextra -pedantic \
+  @CXX_WFLAGS@ \
   -I$(top_srcdir)/include
 
 
@@ -67,7 +67,7 @@ bootstrap_reflex_SOURCES= \
   bootstrap_unicode.cc
 
 bootstrap_reflex_CPPFLAGS= \
-  -Wall -Wextra -pedantic \
+  @CXX_WFLAGS@ \
   -I$(top_srcdir)/include
 
 bootstrap_reflex_LDADD= \
@@ -86,7 +86,7 @@ gen_block_scripts_SOURCES= \
   bootstrap_unicode.cc
 
 gen_block_scripts_CPPFLAGS= \
-  -Wall -Wextra -pedantic \
+  @CXX_WFLAGS@ \
   -I$(top_srcdir)/include
 
 gen_block_scripts_LDADD=\
@@ -98,7 +98,7 @@ gen_language_scripts_SOURCES= \
   bootstrap_unicode.cc
 
 gen_language_scripts_CPPFLAGS= \
-  -Wall -Wextra -pedantic \
+  @CXX_WFLAGS@ \
   -I$(top_srcdir)/include
 
 gen_language_scripts_LDADD=\
@@ -110,7 +110,7 @@ gen_letter_scripts_SOURCES= \
   bootstrap_unicode.cc
 
 gen_letter_scripts_CPPFLAGS= \
-  -Wall -Wextra -pedantic \
+  @CXX_WFLAGS@ \
   -I$(top_srcdir)/include
 
 gen_letter_scripts_LDADD=\
@@ -138,7 +138,7 @@ libreflex_la_SOURCES= \
 
 
 libreflex_la_CPPFLAGS= \
-  -Wall -Wextra -pedantic \
+  @CXX_WFLAGS@ \
   -I$(top_srcdir)/include
 
 libreflex_la_LDFLAGS= -version-info 2:0:0
@@ -168,7 +168,7 @@ reflex_SOURCES = \
   reflex.cpp
 
 reflex_CPPFLAGS= \
-  -Wall -Wextra -pedantic \
+  @CXX_WFLAGS@ \
   -I$(top_srcdir)/include \
   -DPLATFORM=\"$(PLATFORM)\"
 

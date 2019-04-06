@@ -31,6 +31,7 @@ AC_CONFIG_AUX_DIR(config)
 AM_INIT_AUTOMAKE([foreign std-options])
 AC_CONFIG_MACRO_DIR([m4])
 
+AC_LANG(C++)
 
 # checks for programs
 AC_PROG_INSTALL
@@ -84,6 +85,14 @@ AC_HEADER_TIME
 # checks for compiler characteristics
 # Check for C++11 compiler
 AX_CXX_COMPILE_STDCXX([11],[noext],[mandatory])
+
+# Check how to add all warnings for this compiler
+AX_CXXFLAGS_WARN_ALL([CXX_WFLAGS])
+
+AX_CHECK_COMPILE_FLAG([-Wextra],[CXX_WFLAGS="$CXX_WFLAGS -Wextra"])
+AX_CHECK_COMPILE_FLAG([-pedantic],[CXX_WFLAGS="$CXX_WFLAGS -pedantic"])
+
+AC_SUBST([CXX_WFLAGS],[$CXX_WFLAGS])
 
 # checks for library functions
 
