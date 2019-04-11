@@ -24,7 +24,7 @@
 #  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 AC_PREREQ([2.69])
-AC_INIT([reflex],[1.1.2],[github.com/tegtmeye/re-flex])
+AC_INIT([reflex],[1.1.4],[github.com/tegtmeye/re-flex])
 AC_CONFIG_SRCDIR([Makefile.am])
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_AUX_DIR(config)
@@ -159,6 +159,7 @@ AC_SUBST([CONFIG_STATUS_DEPENDENCIES],
   $(top_srcdir)/examples/ptokens.l.in'])
 
 AC_CONFIG_FILES( \
+  reflex.pc \
   Makefile \
   include/Makefile \
   src/Makefile \

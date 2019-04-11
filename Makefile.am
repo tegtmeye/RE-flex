@@ -30,6 +30,9 @@ ACLOCAL_AMFLAGS = --install -I m4
 SUBDIRS = src include tests doc
 
 
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = reflex.pc
+
 # Make sure the top level files and the files necessary to build the
 # documentation are included in the distribution. Generated man files are
 # included in the documentation but the Doxygen content is not.
@@ -40,7 +43,6 @@ EXTRA_DIST= \
   examples/ctokens.l.in \
   examples/jtokens.l.in \
   examples/ptokens.l.in \
-  CONTRIBUTING.md \
   INSTALL \
   COPYING \
   README.md

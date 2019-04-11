@@ -46,7 +46,7 @@ stamp-h1
 doc/html
 *.log
 *.gv
-
+reflex.pc
 
 # intermediate files
 src/block_scripts.cc

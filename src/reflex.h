@@ -56,17 +56,6 @@
 # define OS_WIN
 #endif
 
-#if !defined(PLATFORM)
-# if defined(OS_WIN)
-#  define PLATFORM "WIN"
-# else
-#  define PLATFORM "(unknown OS)"
-# endif
-#endif
-
-// DO NOT ALTER THIS LINE: the makemake.sh script updates the version
-#define REFLEX_VERSION "1.1.4"
-
 /// RE/flex scanner generator class, a variation of the classic "lex" tool to generate scanners.
 /**
 
@@ -154,7 +143,7 @@ class Reflex
   void        write_code(const Code& code);
   void        write_lexer();
   void        write_main();
-  void        write_regex(const std::string& regex);    
+  void        write_regex(const std::string& regex);
   void        write_namespace_open();
   void        write_namespace_close();
   void        write_namespace_scope();
