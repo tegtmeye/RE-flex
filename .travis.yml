@@ -1,5 +1,31 @@
 language: cpp
+
 compiler:
   - clang
   - gcc
+
+os:
+  - linux
+  - osx
+
+addons:
+  apt:
+    packages:
+      - libboost-regex-dev
+      - doxygen
+      - flex
+      - bison
+      - help2man
+      - graphviz
+  homebrew:
+    packages:
+      - boost
+      - doxygen
+      - flex
+      - bison
+      - help2man
+      - graphviz
+
 before_install: autoreconf -fi
+
+script: ./configure && make -j && make -j distcheck
