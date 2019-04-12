@@ -19,6 +19,8 @@ addons:
       - bison
       - help2man
       - graphviz
+    update: true
+
   homebrew:
     packages:
       - boost
@@ -27,6 +29,7 @@ addons:
       - bison
       - help2man
       - graphviz
+    update: true
 
 before_install: autoreconf -fi
 
