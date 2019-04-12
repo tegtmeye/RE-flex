@@ -12,14 +12,17 @@ dist: xenial
 
 addons:
   apt:
+    update: true
+    sources:
+      - sourceline: 'ppa:mhier/libboost-latest'
+      - ubuntu-toolchain-r-test
     packages:
-      - libboost-regex-dev
+      - boost1.67
       - doxygen
       - flex
       - bison
       - help2man
       - graphviz
-    update: true
 
   homebrew:
     packages:
