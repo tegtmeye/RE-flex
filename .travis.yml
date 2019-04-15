@@ -32,4 +32,4 @@ addons:
 
 before_install: autoreconf -fi
 
-script: ./configure && make -j && make -j distcheck
+script: ./configure && make && make check

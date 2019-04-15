@@ -72,7 +72,7 @@ fi
 
 # checks for libraries
 # Check for boost
-AX_BOOST_BASE([1.64])
+AX_BOOST_BASE
 AX_BOOST_REGEX
 
 # checks for header files
