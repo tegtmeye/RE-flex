@@ -147,7 +147,7 @@ before_script:
   ############################################################################
   # Go back to the root of the project and setup the build directory
   ############################################################################
-  - cd "${HOME}/RE-flex"
+  - cd "${TRAVIS_BUILD_DIR}"
   - autoreconf -fi
 
 script: ./configure ${CONFIG_OPTIONS} && make && make check
