@@ -103,12 +103,12 @@ install:
       if [[ "${BOOST_VERSION}" == "trunk" ]]; then
         BOOST_URL="http://github.com/boostorg/boost.git"
         travis_retry git clone --depth 1 --recursive ${BOOST_URL} ${BOOST_DIR} || exit 1
-        (cd ${BOOST_DIR} && ./bootstrap.sh --prefix=${DEPS_DIR} && ./b2 --with-regex --with-system -d0 install) || exit 1
+        (cd ${BOOST_DIR} && ./bootstrap.sh && ./b2 --with-regex --with-system -d0 install) || exit 1
       else
         BOOST_URL="https://github.com/boostorg/boost/archive/boost-${BOOST_VERSION//\./_}.tar.gz"        BOOST_URL="https://dl.bintray.com/boostorg/release/${BOOST_VERSION}/source/boost_${BOOST_VERSION//\./_}.tar.gz"
         mkdir -p ${BOOST_DIR}
         { travis_retry wget -O - ${BOOST_URL} | tar --strip-components=1 -xz -C ${BOOST_DIR}; } || exit 1
-        (cd ${BOOST_DIR} && ./bootstrap.sh --prefix=${DEPS_DIR} && ./b2 --with-regex --with-system -d0 install) || exit 1
+        (cd ${BOOST_DIR} && ./bootstrap.sh && ./b2 --with-regex --with-system -d0 install) || exit 1
       fi
 
       CONFIG_OPTIONS="--with-boost=${BOOST_DIR}"
