@@ -19,98 +19,6 @@ matrix:
     ##########################################################################
     # Clang 3.5
     - env: UNIT_TESTS=true COMPILER=clang++-3.5 BOOST_VERSION=default ENABLE_MEMCHECK=true
-      addons:
-        - apt:
-          - packages: ["clang-3.5", "doxygen", "flex", "bison", "help2man", "graphviz"]
-          - sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.5"]
-
-    # Clang 3.6
-    - env: UNIT_TESTS=true COMPILER=clang++-3.6 BOOST_VERSION=default ENABLE_MEMCHECK=true
-      addons:
-        - apt:
-          - packages: ["clang-3.6", "doxygen", "flex", "bison", "help2man", "graphviz"]
-          - sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.6"]
-
-    # Clang 3.7
-    - env: UNIT_TESTS=true COMPILER=clang++-3.7 BOOST_VERSION=default ENABLE_MEMCHECK=true
-      addons:
-        - apt:
-          - packages: ["clang-3.7", "doxygen", "flex", "bison", "help2man", "graphviz"]
-          - sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.7"]
-
-    # Clang 3.8
-    - env: UNIT_TESTS=true COMPILER=clang++-3.8 BOOST_VERSION=default ENABLE_MEMCHECK=true
-      addons:
-        - apt:
-          - packages: ["clang-3.8", "doxygen", "flex", "bison", "help2man", "graphviz"]
-          - sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.8"]
-
-    # Clang 3.9
-    - env: UNIT_TESTS=true COMPILER=clang++-3.9 BOOST_VERSION=default ENABLE_MEMCHECK=true
-      addons:
-        - apt:
-          - packages: ["clang-3.9", "doxygen", "flex", "bison", "help2man", "graphviz"]
-          - sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-3.9"]
-
-    # Clang 4.0
-    - env: UNIT_TESTS=true COMPILER=clang++-4.0 BOOST_VERSION=default ENABLE_MEMCHECK=true
-      addons:
-        - apt:
-          - packages: ["clang-4.0", "doxygen", "flex", "bison", "help2man", "graphviz"]
-          - sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-4.0"]
-
-    # Clang 5.0
-    - env: UNIT_TESTS=true COMPILER=clang++-5.0 BOOST_VERSION=default ENABLE_MEMCHECK=true
-      addons:
-        - apt:
-          - packages: ["clang-5.0", "doxygen", "flex", "bison", "help2man", "graphviz"]
-          - sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-5.0"]
-
-    # GCC 6
-    - env: UNIT_TESTS=true COMPILER=g++-6 BOOST_VERSION=default ENABLE_MEMCHECK=true
-      addons:
-        - apt:
-          - packages: ["g++-6", "doxygen", "flex", "bison", "help2man", "graphviz"]
-          - sources: ["ubuntu-toolchain-r-test"]
-
-    # GCC 7
-    - env: UNIT_TESTS=true COMPILER=g++-7 BOOST_VERSION=default ENABLE_MEMCHECK=true
-      addons:
-        - apt:
-          - packages: ["g++-7", "doxygen", "flex", "bison", "help2man", "graphviz"]
-          - sources: ["ubuntu-toolchain-r-test"]
-
-    # Xcode 6.4
-    - os: osx
-      env: UNIT_TESTS=true BOOST_VERSION=default
-      addons:
-        - homebrew:
-          - packages: ["doxygen", "flex", "bison", "help2man", "graphviz"]
-      osx_image: xcode6.4
-
-    # Xcode 7.3
-    - os: osx
-      env: UNIT_TESTS=true BOOST_VERSION=default
-      addons:
-        - homebrew:
-          - packages: ["doxygen", "flex", "bison", "help2man", "graphviz"]
-      osx_image: xcode7.3
-
-    # Xcode 8.3
-    - os: osx
-      env: UNIT_TESTS=true BOOST_VERSION=default
-      addons:
-        - homebrew:
-          - packages: ["doxygen", "flex", "bison", "help2man", "graphviz"]
-      osx_image: xcode8.3
-
-    # Xcode 9.1
-    - os: osx
-      env: UNIT_TESTS=true BOOST_VERSION=default
-      addons:
-        - homebrew:
-          - packages: ["doxygen", "flex", "bison", "help2man", "graphviz"]
-      osx_image: xcode9.1
 
 
 
@@ -122,43 +30,6 @@ install:
   - DEPS_DIR="${HOME}/deps"
   - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
 
-  ############################################################################
-  # Setup default versions and override CXX set by Travis if needed
-  ############################################################################
-  - if [[ "${COMPILER}" == "default" ]]; then COMPILER=clang++-5.0; fi
-  - if [[ "${BOOST_VERSION}" == "default" ]]; then BOOST_VERSION=1.66.0; fi
-
-  - if [[ "${COMPILER}" != "" ]]; then export CXX=${COMPILER}; fi
-  - ${CXX} --version
-
-  ############################################################################
-  # Install Boost headers
-  ############################################################################
-  - |
-    if [[ "${BOOST_VERSION}" != "" ]]; then
-      BOOST_DIR=${DEPS_DIR}/boost-${BOOST_VERSION}
-      if [[ "${BOOST_VERSION}" == "trunk" ]]; then
-        BOOST_URL="http://github.com/boostorg/boost.git"
-        travis_retry git clone --depth 1 --recursive ${BOOST_URL} ${BOOST_DIR} || exit 1
-        (cd ${BOOST_DIR} && ./bootstrap.sh && ./b2 headers) || exit 1
-      else
-        BOOST_URL="https://dl.bintray.com/boostorg/release/${BOOST_VERSION}/source/boost_${BOOST_VERSION//\./_}.tar.gz"
-        mkdir -p ${BOOST_DIR}
-        { travis_retry wget -O - ${BOOST_URL} | tar --strip-components=1 -xz -C ${BOOST_DIR}; } || exit 1
-      fi
-
-      CONFIG_OPTIONS+=" --with-boost=${BOOST_DIR}"
-    fi
-
-  ############################################################################
-  # Install Boost.Build
-  ############################################################################
-  - |
-    if [[ "${BOOST_BUILD}" == "true" ]]; then
-      (cd ${BOOST_DIR}/tools/build && ./bootstrap.sh && ./b2 install --prefix=${DEPS_DIR}/b2)
-      export PATH=${DEPS_DIR}/b2/bin:${PATH}
-      b2 --version || true # b2 --version returns 1
-    fi
 
 
 before_script:
@@ -166,8 +37,6 @@ before_script:
   # Go back to the root of the project and setup the build directory
   ############################################################################
   - cd "${TRAVIS_BUILD_DIR}"
-  - autoreconf -fi
 
 script:
   - echo "${CONFIG_OPTIONS}"
-  - ./configure "${CONFIG_OPTIONS}" && make && make check
