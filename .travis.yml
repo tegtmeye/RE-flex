@@ -124,8 +124,4 @@ before_script:
   - autoreconf -fi
 
 script:
-  - echo "${CONFIG_OPTIONS}"
-  - ls -l "${DEPS_DIR}"
-  - ls -l "${DEPS_DIR}/include"
-  - ls -l "${DEPS_DIR}/lib"
   - ./configure "${CONFIG_OPTIONS}" && make && make check
