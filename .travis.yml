@@ -14,7 +14,7 @@ matrix:
     # Build with the main configuration on all the supported compilers
     ##########################################################################
     # Clang 3.5
-      - env: UNIT_TESTS=true COMPILER=clang++-3.5 BOOST_VERSION=default ENABLE_MEMCHECK=true
+      - env: COMPILER=clang++-3.5 BOOST_VERSION=default
       addons: { apt: { packages: ["clang-3.5", "doxygen", "flex", "bison", "help2man", "graphviz"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.5"]
 
     # Clang 3.6
