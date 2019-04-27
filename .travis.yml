@@ -18,12 +18,12 @@ matrix:
       addons: &defaults { apt: { packages: ["clang-6.0", "doxygen", "flex", "bison", "help2man", "graphviz"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-6.0"] } }
 
     # Clang 7.0
-    - env:  COMPILER=clang++-7.0 BOOST_VERSION=default
-      addons: &defaults { apt: { packages: ["clang-7.0", "doxygen", "flex", "bison", "help2man", "graphviz"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-7"] } }
+    - env:  COMPILER=clang++-7 BOOST_VERSION=default
+      addons: &defaults { apt: { packages: ["clang-7", "doxygen", "flex", "bison", "help2man", "graphviz"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-7"] } }
 
     # Clang 8.0
-    - env:  COMPILER=clang++-8.0 BOOST_VERSION=default
-      addons: &defaults { apt: { packages: ["clang-8.0", "doxygen", "flex", "bison", "help2man", "graphviz"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-8"] } }
+    - env:  COMPILER=clang++-8 BOOST_VERSION=default
+      addons: &defaults { apt: { packages: ["clang-8", "doxygen", "flex", "bison", "help2man", "graphviz"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-8"] } }
 
     # GCC 6
     - env:  COMPILER=g++-6 BOOST_VERSION=default
@@ -42,13 +42,13 @@ matrix:
     # Xcode 8.3
     - os: osx
       env:  BOOST_VERSION=default
-      addons: { homebrew: { update: true, packages: ["doxygen", "help2man", "graphviz"] } }
+      addons: { homebrew: { packages: ["doxygen", "help2man", "graphviz"] } }
       osx_image: xcode8.3
 
     # Xcode 9.1
     - os: osx
       env:  BOOST_VERSION=default
-      addons: { homebrew: { update: true, packages: ["doxygen", "help2man", "graphviz"] } }
+      addons: { homebrew: { packages: ["doxygen", "help2man", "graphviz"] } }
       osx_image: xcode9.1
 
 
