@@ -110,7 +110,7 @@ install:
         { travis_retry wget -O - ${BOOST_URL} | tar --strip-components=1 -xz -C ${BOOST_DIR}; } || exit 1
       fi
 
-      CONFIG_OPTIONS+=" --with-boost=${BOOST_DIR}"
+      CONFIG_OPTIONS="--with-boost=${BOOST_DIR}"
     fi
 
   ############################################################################
